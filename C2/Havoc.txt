@@ -1,0 +1,8 @@
+È un C2
+Per avviarlo prima avviare teamviewer con il profile giusto 
+sudo ./teamserver server --profile ./profiles/http_smb.yoatl
+
+Poi lancia Havoc da Client/
+username:sjay
+password:password1234
+

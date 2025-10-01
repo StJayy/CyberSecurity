@@ -1,0 +1,11 @@
+Vediamo che nella cartella helper nel DB, usa sqlite3 senza sanificazione dell'input
+Inoltre possiamo vedere come utilizzi jsonwebtoken che è vulnerabile come si puo' vedere dal sito
+https://security.snyk.io/vuln/npm:jsonwebtoken:20150331
+
+Entro nel sito e mi registro. Procedo al login
+Il cookie lo posso inserire in 
+jwt.io, verifico che l'algoritmo è di tipo RS256
+Dal sito posso trovare la public key e la inserisco in un file. Mi serve il token
+
+Con burpsuite trovo il token e mando la richiesta al repeater.
+--To be Continued--

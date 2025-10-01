@@ -1,0 +1,6 @@
+vulnerabilità:
+exploit-db
+cvedetails
+
+ports:
+speedguide

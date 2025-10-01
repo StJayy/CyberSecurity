@@ -1,0 +1,4 @@
+Genero payload con
+generate payload=windows/ poi con tab autcomplete e scelgo ed infine lhost=eth0
+
+Per ora, ad oggi, quelli con hoaxshell e cmd funzionano

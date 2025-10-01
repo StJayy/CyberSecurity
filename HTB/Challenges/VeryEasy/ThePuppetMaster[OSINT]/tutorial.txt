@@ -1,0 +1,3 @@
+Dobbiamo reperire informazioni da una foto
+
+Tutto molto veloce, lo troviamo con un rapido OSINT da google

@@ -1,0 +1,7 @@
+Primo semplicissimo esempio di reverse engineering di un bin.
+Eseguendo il bin chiede una password.
+Inzio con la cosa più banale:
+
+strings ./pass
+
+strings estrae il testo stampabile dal binario, è già scritta la password

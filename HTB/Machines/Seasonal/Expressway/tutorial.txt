@@ -1,0 +1,12 @@
+nmap porte TCP, nulla
+nmap porte UDP, le analizzo e trovo vulnerabilita in porta 500.
+
+con ike-scan e tutto il resto trovo hash e password con attacco bruteforce tramite rockyou.txt
+
+entro su ssh con password appena trovata (username si trova anche la)
+
+PRIV ESCALATION
+Molto veloce, provo sudo -l, non funziona.
+Trovo un file script sudo.sh
+
+Noto leggendolo che se lo lancio senza parametri apre una scell root, lo faccio, trovo root.txt

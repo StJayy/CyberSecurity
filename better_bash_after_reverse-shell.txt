@@ -1,0 +1,11 @@
+socat meglio di nc
+
+Ordine per rendere il bash interattivo:
+
+- python3 -c 'import pty;pty.spawn("/bin/bash")'
+- export TERM=xterm
+- CTRL+Z (suspend session)\
+- stty raw -echo; fg
+- stty rows 38 columns 116
+
+Done

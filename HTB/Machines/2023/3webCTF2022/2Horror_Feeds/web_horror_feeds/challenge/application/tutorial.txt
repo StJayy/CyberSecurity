@@ -1,0 +1,15 @@
+Provo a mandare la richiest su burpsuite 
+Provo a mandare un errore nella richiesta
+username : "admin\""
+
+Mi da errore e sctringa di errore, capisco che c'è SQL injection
+L'errore, la soluzione è la ON DUPLICATE statement perchè sto facendo questo procedimento dal register
+
+Con lo statement se l'admin esiste già posso cambiarne la password
+Il formato è preso da Google e l'username diventerà il seguente
+
+"username":"admin\",\"junk"} ON DUPLICATE KEY UPDATE password=\"string\"-- -"
+"password":"new_password"
+
+Cambio l'account e posso fare il login con le nuove credenziali
+Ho la flag

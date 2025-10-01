@@ -1,0 +1,8 @@
+#PER VEDERE DOVE VA IL MIO TRAFFICO
+ip route show
+
+#ASCOLTO SERVIZI IN ASCOLTO SU PORTA 500
+sudo lsof -i :500
+
+#ELIMINO IL PROCESSO
+sudo pkill <nome>

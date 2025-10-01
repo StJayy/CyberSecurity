@@ -1,0 +1,6 @@
+sudo airmon-ng check kill
+airmon-ng start wlan0
+
+Reset:
+sudo airmon-ng stop wlan0
+sudo systemctl start NetworkManager

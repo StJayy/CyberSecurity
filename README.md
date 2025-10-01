@@ -1,0 +1,2 @@
+Queste sono le nozioni di EH che imparo durante il mio percorso.
+Nella cartella HTB ci sono tutte le macchine/challenges/fortress/etc. di HackTheBox che sono riuscito a risolvere, aggiornata di volta in volta

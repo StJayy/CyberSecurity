@@ -1,0 +1,4 @@
+/images              [36m (Status: 301)[0m [Size: 313][34m [--> http://10.10.11.191/images/][0m
+/css                 [36m (Status: 301)[0m [Size: 310][34m [--> http://10.10.11.191/css/][0m
+/js                  [36m (Status: 301)[0m [Size: 309][34m [--> http://10.10.11.191/js/][0m
+/server-status       [33m (Status: 403)[0m [Size: 277]

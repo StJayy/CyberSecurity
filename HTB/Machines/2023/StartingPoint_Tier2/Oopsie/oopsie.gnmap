@@ -1,0 +1,6 @@
+# Nmap 7.93 scan initiated Sat Mar 18 16:19:19 2023 as: nmap -sC -sV -oA oopsie 10.129.171.148 10.129.171.148
+Host: 10.129.171.148 ()	Status: Up
+Host: 10.129.171.148 ()	Ports: 22/open/tcp//ssh//OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)/, 80/open/tcp//http//Apache httpd 2.4.29 ((Ubuntu))/	Ignored State: closed (998)
+Host: 10.129.171.148 ()	Status: Up
+Host: 10.129.171.148 ()	Ports: 22/open/tcp//ssh//OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)/, 80/open/tcp//http//Apache httpd 2.4.29 ((Ubuntu))/	Ignored State: closed (998)
+# Nmap done at Sat Mar 18 16:19:36 2023 -- 2 IP addresses (2 hosts up) scanned in 16.72 seconds

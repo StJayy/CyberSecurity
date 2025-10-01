@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.95 scan initiated Fri Sep 26 12:25:48 2025 as: /usr/lib/nmap/nmap -sU -p- -T4 -oA scans/udp 10.10.11.87 -->
+<nmaprun scanner="nmap" args="/usr/lib/nmap/nmap -sU -p- -T4 -oA scans/udp 10.10.11.87" start="1758903948" startstr="Fri Sep 26 12:25:48 2025" version="7.95" xmloutputversion="1.05">
+<scaninfo type="udp" protocol="udp" numservices="65535" services="1-65535"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<hosthint><status state="up" reason="unknown-response" reason_ttl="0"/>
+<address addr="10.10.11.87" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+</hosthint>

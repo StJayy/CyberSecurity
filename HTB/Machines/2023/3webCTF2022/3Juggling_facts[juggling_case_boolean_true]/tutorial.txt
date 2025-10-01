@@ -1,0 +1,3 @@
+Jiggling, uso burpsuite per la richiesta e vedo che lo use case è bypassabile utilizzando la comune vulnerabilità
+
+Andando ad inserire la clausola true nella richiesta verrà presa la prima route dello use case, che nel nostro caso è proprio la "secret"

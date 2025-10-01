@@ -1,0 +1,44 @@
+[0m[36m[1m[30m                                   ____________[37m
+ [%%%%[0m%%%%%%%%[1m[30m%%%%%%%[30m%%%%%%%%%%%%%| [31m$a,[30m        |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[37m]
+ [%%%[0m%%%%%%%%%[1m[30m%%%%%%%%%%%%%%%%%%%%| [31m$S`?a,[30m     |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[37m]
+ [%%[0m%%%%%%%[1m[30m%%%%%%%%%%%[37m_[36m_[30m%%%%%%%%%%|       [31m`?a,[30m |%%%%%%%%[37m_[32m_[30m%%%%%%%%%[37m_[32m_[30m%%[37m_[32m_ [30m%%%%[37m]
+ [% .-[36m--[0m[36m-----.[1m[37m.-[36m-[0m[36m---.[1m[37m|  [0m[36m|_ [1m[37m.-[36m-[0m[36m-.-.[1m[30m|       [31m.,a$%[30m|[37m.-[32m---[0m[32m-.[1m[37m|  [0m[32m|[1m[37m.-[32m--[0m[32m--.[1m[37m|[32m_[0m[32m_|[1m[37m|  [0m[32m|_ [1m[30m%%[37m]
+ [% |        [0m[36m|[1m[37m|  [0m[36m-__|[0m[36m|   [0m[36m_|[1m[37m|  [0m[36m_  |[1m[30m|  [31m,,aS$""`[30m  |[37m|  [0m[32m_  |[1m[32m|  [0m[32m|[1m[37m|  [0m[32m_  |[1m[32m|  [0m[32m|[1m[32m|   [0m[32m_|[1m[30m%%[37m]
+ [% [36m|[0m[36m__|__|__|[1m[36m|_[0m[36m____|[1m[36m|_[0m[36m___|[1m[36m|_[0m[36m__._|[1m[30m|[31m%$P"`[30m       |[32m|   [0m[32m__|[1m[32m|_[0m[32m_|[1m[32m|_[0m[32m____|[1m[32m|_[0m[32m_|[1m[32m|_[0m[32m___|[1m[30m%%[1m[37m]
+ [%[0m%%%[1m[30m%%%%%%%%%%%%%%%%%%%%%%%%%%%%| [31m`"a,[30m       |[0m[32m|__|[1m[30m%%%%%%%%%%%%%%%%%%%%%%%%%%[37m]
+ [%[0m%%[1m[30m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%|____[31m`"a,$$[30m__|%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[37m]
+ [[0m%%[1m[30m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        [31m`"$[30m   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[37m]
+ [[0m%[1m[30m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[37m]
+[0m
+
+       =[ [33mmetasploit v6.3.4-dev[0m                           ]
++ -- --=[ 2294 exploits - 1201 auxiliary - 409 post       ]
++ -- --=[ 968 payloads - 45 encoders - 11 nops            ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit tip: Display the Framework log using the 
+[32mlog[0m command, learn more with [32mhelp log[0m
+Metasploit Documentation: https://docs.metasploit.com/
+
+[?1034h[4mmsf6[0m [0m> ls
+[0m[1m[34m[*][0m exec: ls
+
+46153.py
+bg
+credentials.txt
+encrypted_passwd.txt
+gobuster.txt
+remote.nmap
+Remote.pdf
+Result-winPEAS.txt
+rev.ps1
+test
+tutorial.txt
+Umbraco.sdf
+www
+[4mmsf6[0m [0m> Interrupt: use the 'exit' command to quit
+[4mmsf6[0m [0m> Interrupt: use the 'exit' command to quit
+[4mmsf6[0m [0m> Interrupt: use the 'exit' command to quit
+[4mmsf6[0m [0m> Interrupt: use the 'exit' command to quit
+[4mmsf6[0m [0m> Interrupt: use the 'exit' command to quit
+[4mmsf6[0m [0m> 

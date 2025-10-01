@@ -1,0 +1,2 @@
+#CERCARE PASSWORD DA PW HASHATA
+hashcat -m 0 hashed_passwds.txt /usr/share/wordlists/rockyou.txt

@@ -1,0 +1,34 @@
+scan nmap. Poche porte aperte, vado sul sito
+L'unica cosa utile è poter scaricare i packets. Analizzabili su WireShark
+
+Se torno sulla pagina di ascolto pacchetto e lancio ftp posso vedere che i pacchetti sono stati catturati.
+Leggendoli con WireShark noto che PASS e USERNAME sono leggibili infatti ftp è un servizio molto vecchio e non crypta le informazioni che invio
+
+Apparentemente nulla è presente sul sito che mi permetta di andare avanti. 
+Noto pero' che ogni volta che ascolto i pacchetti mi salva in una sessione diversa:
+/data/1 /data/2 /data/3 /data/4 
+
+Provando ad andare alla sessione 0 trovo dei pacchetti interessanti
+
+Trovo USER E PASS, posso entrare in ssh
+Trovo user flag
+
+sudo -l solito. Putroppo nathan non la puo' utilizzare
+Altro modo per il privesc
+
+Linux offre altri modi per elevare certi privilegi di un processo oltre a sudo.
+Utilizza le Linux capabilities
+
+Comando getcap per numerare capabilities
+getcap -r / 2>/dev/null
+
+Vuol dire cerca un programma a partire dal filesystem in tutte le subdirectory in modo ricorsivo alla ricerca di un programma con le capabilities
+Buttando fuori tutti gli errori
+
+Noto subito il primo, python3.8 perchè setUID significa elevare i privilegi 
+Mi basta entrare nel terminal con python3.8 lanciando il comando
+import os
+os.setuid(0)
+os.system("bash")
+
+E sono root nella nuova bash

